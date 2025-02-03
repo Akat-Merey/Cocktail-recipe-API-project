@@ -1,0 +1,79 @@
+<%- include('partials/header.ejs')%>
+
+<!-- Container with all recipies -->
+<div class="recipeContainer">
+    <h1>All possible recipies with: <%=ingredients%></h1>
+</div>
+
+
+
+
+<script>
+    // Makes the name of recipe start with capital letter
+    function upperCase(string) {
+         return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+    // Takes Json recipies from js
+    const data = <%- JSON.stringify(data)%>
+
+    try{
+        // displays each recipe into separated divs
+        if (data.length > 0) {
+            const container = document.querySelector('.recipeContainer');
+
+            data.forEach(recipe=>{
+                const divRecipe = document.createElement('div')
+                divRecipe.className = 'recipe'
+
+                const divName = document.createElement('div')
+                divName.className = 'name';
+                divName.textContent= upperCase(recipe.name);
+
+                const divIngredients = document.createElement('div')
+                divIngredients.className = 'ingredients';
+                divIngredients.innerHTML = "<strong>Ingredients and measures:</strong>"
+                const ul = document.createElement('ul')
+                recipe.ingredients.forEach(ingr =>{
+                    const li = document.createElement('li')
+                    li.textContent = ingr
+                    ul.appendChild(li)
+                })
+                divIngredients.appendChild(ul)
+
+                const divInstructions = document.createElement('div')
+                divInstructions.className = 'instructions';
+                divInstructions.innerHTML  = '<strong>Instruction: </strong>' + recipe.instructions;
+
+                divRecipe.appendChild(divName)
+                divRecipe.appendChild(divIngredients)
+                divRecipe.appendChild(divInstructions)
+
+                container.appendChild(divRecipe)
+            })
+        } else{
+            // If no recipies possible it displays "No recipe"
+            const container = document.querySelector('.recipeContainer');
+
+            const h2 = document.createElement('h2')
+            h2.innerHTML ='No posisible recipe'
+            h2.className = 'noRecipe'
+            container.appendChild(h2)
+
+            const a = document.createElement('a')
+            a.href = '/'
+            a.className = 'backHome'
+            const button = document.createElement('button')
+            button.className = 'buttonHome'
+            button.innerText = 'Go back'
+            a.appendChild(button)
+            container.appendChild(a)
+
+        }
+    }catch(error){
+        console.error('An error occured when displaying all recipies', error)
+    }
+
+
+</script>
+<%- include('partials/footer.ejs')%>
